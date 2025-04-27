@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Contract Explorer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #512da8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #512da8;
+            font-size: 1.4rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+        }
+        button {
+            background-color: #512da8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        button:hover {
+            background-color: #673ab7;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .button-icon {
+            margin-right: 8px;
+        }
+        .success {
+            color: #388e3c;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin: 15px 0;
+        }
+        .error {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin: 15px 0;
+        }
+        .log-container {
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .log-program {
+            color: #0d47a1;
+            font-weight: bold;
+        }
+        .log-data {
+            color: #2e7d32;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col {
+            flex: 1;
+        }
+        .data-highlight {
+            background-color: #e3f2fd;
+            padding: 3px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #512da8;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .hidden {
+            display: none;
+        }
+        .explorer-link {
+            display: block;
+            margin-top: 15px;
+            color: #512da8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .explorer-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Solana Contract Explorer</h1>
+        
+        <div class="card">
+            <h2>Add-Numbers Contract</h2>
+            <p>This tool helps you deploy and interact with the add-numbers Solana contract.</p>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="network">Network:</label>
+                        <select id="network">
+                            <option value="devnet">Devnet</option>
+                            <option value="testnet">Testnet</option>
+                            <option value="mainnet-beta">Mainnet</option>
+                            <option value="localhost">Localhost</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="keypair">Keypair Path:</label>
+                        <input type="text" id="keypair" placeholder="/path/to/id.json" value="id.json">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="program-path">Program Path:</label>
+                        <input type="text" id="program-path" placeholder="/path/to/program.so" value="add-numbers/target/deploy/add_numbers.so">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="program-id">Program ID (after deployment):</label>
+                        <input type="text" id="program-id" placeholder="Program ID will appear here after deployment" disabled>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="deploy-button">
+                <span class="button-icon">📦</span> Deploy Contract
+                <span id="deploy-loader" class="loader hidden"></span>
+            </button>
+            
+            <button id="invoke-button" disabled>
+                <span class="button-icon">🚀</span> Invoke Contract
+                <span id="invoke-loader" class="loader hidden"></span>
+            </button>
+            
+            <div id="deploy-output"></div>
+            <div id="invoke-output"></div>
+        </div>
+        
+        <div class="card" id="results-card" style="display: none;">
+            <h2>Contract Results</h2>
+            
+            <div class="log-container" id="log-container">
+                <div class="log-entry">Logs will appear here after contract invocation...</div>
+            </div>
+            
+            <a href="#" target="_blank" id="explorer-link" class="explorer-link">View on Solana Explorer</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deployButton = document.getElementById('deploy-button');
+            const invokeButton = document.getElementById('invoke-button');
+            const deployLoader = document.getElementById('deploy-loader');
+            const invokeLoader = document.getElementById('invoke-loader');
+            const deployOutput = document.getElementById('deploy-output');
+            const invokeOutput = document.getElementById('invoke-output');
+            const logContainer = document.getElementById('log-container');
+            const networkSelect = document.getElementById('network');
+            const keypairInput = document.getElementById('keypair');
+            const programPathInput = document.getElementById('program-path');
+            const programIdInput = document.getElementById('program-id');
+            const resultsCard = document.getElementById('results-card');
+            const explorerLink = document.getElementById('explorer-link');
+            
+            // Deploy button click handler
+            deployButton.addEventListener('click', async function() {
+                const network = networkSelect.value;
+                const keypairPath = keypairInput.value;
+                const programPath = programPathInput.value;
+                
+                if (!keypairPath) {
+                    deployOutput.innerHTML = '<div class="error">Please enter a keypair path</div>';
+                    return;
+                }
+                
+                if (!programPath) {
+                    deployOutput.innerHTML = '<div class="error">Please enter a program path</div>';
+                    return;
+                }
+                
+                try {
+                    // Show loader and disable button
+                    deployLoader.classList.remove('hidden');
+                    deployButton.disabled = true;
+                    deployOutput.innerHTML = '';
+                    
+                    // Call the backend API to deploy the program
+                    const response = await fetch('/api/deploy', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            programPath,
+                            network,
+                            keypairPath
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Hide loader
+                    deployLoader.classList.add('hidden');
+                    deployButton.disabled = false;
+                    
+                    if (result.success) {
+                        deployOutput.innerHTML = `
+                            <div class="success">
+                                ✅ Deployment successful!<br>
+                                Program ID: ${result.programId}<br>
+                                Network: ${result.network}
+                            </div>
+                        `;
+                        
+                        // Update program ID field
+                        programIdInput.value = result.programId;
+                        
+                        // Enable invoke button
+                        invokeButton.disabled = false;
+                    } else {
+                        deployOutput.innerHTML = `
+                            <div class="error">
+                                ❌ Deployment failed: ${result.error}<br>
+                                ${result.errorCode ? `Error code: ${result.errorCode}<br>` : ''}
+                                ${result.details ? `Details: ${result.details}` : ''}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    deployLoader.classList.add('hidden');
+                    deployButton.disabled = false;
+                    deployOutput.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+                }
+            });
+            
+            // Invoke button click handler
+            invokeButton.addEventListener('click', async function() {
+                const network = networkSelect.value;
+                const keypairPath = keypairInput.value;
+                const programId = programIdInput.value;
+                
+                if (!programId) {
+                    invokeOutput.innerHTML = '<div class="error">Please deploy the program first</div>';
+                    return;
+                }
+                
+                try {
+                    // Show loader and disable button
+                    invokeLoader.classList.remove('hidden');
+                    invokeButton.disabled = true;
+                    invokeOutput.innerHTML = '';
+                    
+                    // Call the backend API to invoke the program
+                    const response = await fetch('/api/invoke', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            programId,
+                            network,
+                            keypairPath
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Hide loader
+                    invokeLoader.classList.add('hidden');
+                    invokeButton.disabled = false;
+                    
+                    if (result.success) {
+                        invokeOutput.innerHTML = `
+                            <div class="success">
+                                ✅ Program invoked successfully!<br>
+                                Transaction signature: ${result.signature}<br>
+                            </div>
+                        `;
+                        
+                        // Show results card
+                        resultsCard.style.display = 'block';
+                        
+                        // Update explorer link
+                        explorerLink.href = result.explorerUrl;
+                        
+                        // Display logs
+                        logContainer.innerHTML = '';
+                        
+                        let number1, number2, sum;
+                        
+                        result.logs.forEach(log => {
+                            const logEntry = document.createElement('div');
+                            logEntry.className = 'log-entry';
+                            
+                            if (log.includes('Program log:')) {
+                                logEntry.className = 'log-entry log-program';
+                                
+                                // Extract calculation data if present
+                                if (log.includes('Number 1:')) {
+                                    number1 = log.match(/Number 1: (\d+)/)[1];
+                                    logEntry.innerHTML = log.replace(/Number 1: (\d+)/, 'Number 1: <span class="data-highlight">$1</span>');
+                                } else if (log.includes('Number 2:')) {
+                                    number2 = log.match(/Number 2: (\d+)/)[1];
+                                    logEntry.innerHTML = log.replace(/Number 2: (\d+)/, 'Number 2: <span class="data-highlight">$1</span>');
+                                } else if (log.includes('Sum:')) {
+                                    sum = log.match(/Sum: (\d+)/)[1];
+                                    logEntry.innerHTML = log.replace(/Sum: (\d+)/, 'Sum: <span class="data-highlight">$1</span>');
+                                } else {
+                                    logEntry.textContent = log;
+                                }
+                            } else {
+                                logEntry.textContent = log;
+                            }
+                            
+                            logContainer.appendChild(logEntry);
+                        });
+                    } else {
+                        invokeOutput.innerHTML = `
+                            <div class="error">
+                                ❌ Program invocation failed: ${result.error}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    invokeLoader.classList.add('hidden');
+                    invokeButton.disabled = false;
+                    invokeOutput.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+                }
+            });
+            
+            // Simulate successful deployment for testing
+            const simulateDeployment = () => {
+                // For local testing without a backend - remove in production
+                const urlParams = new URLSearchParams(window.location.search);
+                const autoTest = urlParams.get('auto-test');
+                
+                if (autoTest === 'true') {
+                    setTimeout(() => {
+                        programIdInput.value = "Demo9nTaibMpXsBQwRtwpcZNYWpaUCa4sMQsfyTLnVSM";
+                        deployOutput.innerHTML = `
+                            <div class="success">
+                                ✅ Demo deployment successful!<br>
+                                Program ID: Demo9nTaibMpXsBQwRtwpcZNYWpaUCa4sMQsfyTLnVSM<br>
+                                Network: devnet
+                            </div>
+                        `;
+                        invokeButton.disabled = false;
+                    }, 1000);
+                }
+            };
+            
+            // Call simulation for demo purposes
+            simulateDeployment();
+        });
+    </script>
+</body>
+</html>

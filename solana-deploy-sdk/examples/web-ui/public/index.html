@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Smart Contract Deployer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fab fa-solana"></i> Solana Smart Contract Deployer</h1>
+            <div class="env-check">
+                <span id="env-status">Checking environment...</span>
+            </div>
+        </header>
+        
+        <section id="workflow">
+            <div class="step" id="step-1">
+                <h2>Step 1: Select Rust Project</h2>
+                <div class="input-group">
+                    <label for="program-dir">Program Directory:</label>
+                    <input type="text" id="program-dir" placeholder="/path/to/your/rust/project">
+                    <button id="browse-btn" class="secondary">Browse</button>
+                </div>
+            </div>
+
+            <div class="step" id="step-2">
+                <h2>Step 2: Build Contract</h2>
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="build-verbose">
+                        Verbose Output
+                    </label>
+                </div>
+                <button id="build-btn" class="primary">Build Contract</button>
+                <div class="result" id="build-result">
+                    <div class="loader" id="build-loader" style="display: none;"></div>
+                    <pre id="build-output"></pre>
+                </div>
+            </div>
+
+            <div class="step" id="step-3">
+                <h2>Step 3: Deploy Contract</h2>
+                <div class="input-group">
+                    <label for="program-path">Compiled Program Path:</label>
+                    <input type="text" id="program-path" placeholder="Path to .so file" readonly>
+                </div>
+                <div class="deploy-options">
+                    <div class="input-group">
+                        <label for="network-select">Network:</label>
+                        <select id="network-select">
+                            <option value="devnet">Devnet</option>
+                            <option value="testnet">Testnet</option>
+                            <option value="mainnet-beta">Mainnet Beta</option>
+                            <option value="localhost">Localhost</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="keypair-path">Keypair Path:</label>
+                        <input type="text" id="keypair-path" placeholder="Default: ~/.config/solana/id.json">
+                        <button id="browse-keypair-btn" class="secondary">Browse</button>
+                    </div>
+                    <label>
+                        <input type="checkbox" id="deploy-verbose">
+                        Verbose Output
+                    </label>
+                </div>
+                <button id="deploy-btn" class="primary" disabled>Deploy Contract</button>
+                <div class="result" id="deploy-result">
+                    <div class="loader" id="deploy-loader" style="display: none;"></div>
+                    <pre id="deploy-output"></pre>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Powered by Solana Deploy SDK</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

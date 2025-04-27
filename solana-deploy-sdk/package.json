@@ -1,0 +1,31 @@
+{
+  "name": "solana-deploy-sdk",
+  "version": "1.0.0",
+  "description": "SDK for building and deploying Rust-based Solana smart contracts",
+  "main": "index.js",
+  "bin": {
+    "solana-deploy": "./bin/solana-deploy.js"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "web-ui": "node examples/web-ui/server.js"
+  },
+  "keywords": [
+    "solana",
+    "blockchain",
+    "smart-contract",
+    "rust",
+    "deployment"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "commander": "^13.1.0",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.3"
+  }
+}
