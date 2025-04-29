@@ -1,6 +1,6 @@
 {
   "name": "solana-deploy-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SDK for building and deploying Rust-based Solana smart contracts",
   "main": "index.js",
   "bin": {
