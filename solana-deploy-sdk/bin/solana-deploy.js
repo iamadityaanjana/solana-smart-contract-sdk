@@ -200,6 +200,48 @@ program
     }
   });
 
+// Web UI command
+program
+  .command('web-ui')
+  .description('Start the Solana Deploy web UI')
+  .option('-p, --port <port>', 'Port to run the web UI server on', '3000')
+  .action(async (options) => {
+    try {
+      console.log(`Starting Solana Deploy Web UI on port ${options.port}...`);
+      console.log(`Open http://localhost:${options.port} in your browser`);
+      
+      // Set the port in the environment
+      process.env.PORT = options.port;
+      
+      // Run the web UI server
+      require('../examples/web-ui/server.js');
+    } catch (error) {
+      console.error(`❌ Error starting web UI: ${error.message}`);
+      process.exit(1);
+    }
+  });
+
+// Explorer UI command
+program
+  .command('explorer-ui')
+  .description('Start the Solana Contract Explorer UI')
+  .option('-p, --port <port>', 'Port to run the explorer UI server on', '3000')
+  .action(async (options) => {
+    try {
+      console.log(`Starting Solana Contract Explorer UI on port ${options.port}...`);
+      console.log(`Open http://localhost:${options.port} in your browser`);
+      
+      // Set the port in the environment
+      process.env.PORT = options.port;
+      
+      // Run the explorer UI server
+      require('../examples/explorer-server.js');
+    } catch (error) {
+      console.error(`❌ Error starting explorer UI: ${error.message}`);
+      process.exit(1);
+    }
+  });
+
 // Build, deploy, and invoke command
 program
   .command('build-deploy-invoke')

@@ -176,6 +176,12 @@ solana-deploy deploy ./target/deploy/my_program.so --network devnet
 # Invoke a deployed program
 solana-deploy invoke <PROGRAM_ID> --network devnet
 
+# Launch the web UI interface
+solana-deploy web-ui --port 3000
+
+# Launch the explorer UI interface
+solana-deploy explorer-ui --port 8080
+
 # Build and deploy in one step
 solana-deploy build-and-deploy ./my-program --network devnet
 
@@ -198,6 +204,9 @@ deploy [options] <program-path>
 invoke [options] <program-id>
   -n, --network <network>        Network where the program is deployed
   -k, --keypair <keypair-path>   Path to keypair file
+
+web-ui [options]
+  -p, --port <port>              Port to run the web UI on (default: 3000)
 
 build-and-deploy [options] <program-dir>
   -n, --network <network>        Network to deploy to (localhost, devnet, testnet, mainnet-beta)

@@ -1,6 +1,6 @@
 {
   "name": "solana-deploy-sdk",
-  "version": "1.0.1",
+  "version": "1.2.2",
   "description": "SDK for building and deploying Rust-based Solana smart contracts",
   "main": "index.js",
   "bin": {
@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "web-ui": "node examples/web-ui/server.js"
+    "web-ui": "node examples/web-ui/server.js",
+    "explorer-ui": "node examples/explorer-server.js"
   },
   "keywords": [
     "solana",

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Server for the Solana Contract Explorer
 const express = require('express');
 const bodyParser = require('body-parser');
