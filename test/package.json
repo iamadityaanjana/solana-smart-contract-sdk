@@ -1,0 +1,19 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test-all.js",
+    "test:env": "node test-environment.js",
+    "test:build": "node test-build.js",
+    "test:deploy": "node test-deploy.js",
+    "test:invoke": "node test-invoke.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Tests for solana-deploy-sdk",
+  "dependencies": {
+    "solana-deploy-sdk": "file:../solana-deploy-sdk"
+  }
+}
