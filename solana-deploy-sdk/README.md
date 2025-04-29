@@ -11,6 +11,87 @@ A Node.js SDK for building and deploying Rust-based Solana smart contracts with 
 - ✅ Keypair management for secure deployments
 - ✅ Command-line interface for quick deployment
 
+## Solana Rust Program Structure
+
+To use this SDK, your Solana Rust program should follow this structure:
+
+```
+my-solana-program/
+├── Cargo.toml           # Package manifest with dependencies
+├── Cargo.lock           # Lockfile (auto-generated)
+└── src/
+    └── lib.rs           # Program entry point
+```
+
+### Cargo.toml Example
+
+Your `Cargo.toml` should include the necessary Solana dependencies:
+
+```toml
+[package]
+name = "my-solana-program"
+version = "0.1.0"
+edition = "2021"
+description = "My Solana Smart Contract"
+
+[features]
+no-entrypoint = []
+
+[dependencies]
+solana-program = "~1.18"
+borsh = "0.10.3"
+borsh-derive = "0.10.3"
+
+[dev-dependencies]
+solana-program-test = "~1.18"
+solana-sdk = "~1.18"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+```
+
+### Program Entry Point Example (lib.rs)
+
+Your `lib.rs` should include the program's entrypoint:
+
+```rust
+use solana_program::{
+    account_info::AccountInfo,
+    entrypoint,
+    entrypoint::ProgramResult,
+    msg,
+    pubkey::Pubkey,
+};
+
+// Define the program's entrypoint
+entrypoint!(process_instruction);
+
+// Program entrypoint's implementation
+pub fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    msg!("Hello, Solana!");
+    
+    // Your program logic goes here
+    
+    Ok(())
+}
+```
+
+### Build Output Structure
+
+After building with `solana-deploy build` or using `buildContract()`, your program's output will be:
+
+```
+my-solana-program/
+└── target/
+    └── deploy/
+        ├── my_solana_program.so            # Compiled program binary
+        └── my_solana_program-keypair.json  # Program keypair (if deployed)
+```
+
 ## Prerequisites
 
 Before using this SDK, ensure you have the following installed:
