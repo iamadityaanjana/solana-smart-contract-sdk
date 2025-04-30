@@ -39,3 +39,7 @@ To use this toolkit, ensure you have the following prerequisites:
 - Node.js (v14 or higher)
 
 Refer to the documentation in each component for detailed usage instructions.
+
+![npm](https://img.shields.io/npm/dw/solana-deploy-sdk)
+![npm](https://img.shields.io/npm/v/solana-deploy-sdk)
+![npm](https://img.shields.io/npm/l/solana-deploy-sdk)
